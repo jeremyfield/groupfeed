@@ -1,0 +1,9 @@
+.idea
+*.iml
+target
+src/main/resources/*
+out/
+*.txt
+*.pem
+*.ppk
+fansites.json
