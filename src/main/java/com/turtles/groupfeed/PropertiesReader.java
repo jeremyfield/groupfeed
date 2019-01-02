@@ -19,6 +19,10 @@ public class PropertiesReader {
         return getStringListFromProp("members", "ot.identifiers");
     }
 
+    public static long getBotOwnerID() {
+        return getLongFromProp("discord", "ownerId");
+    }
+
     public static long getGroupChannelID() {
         return getLongFromProp("members", "ot.channels");
     }

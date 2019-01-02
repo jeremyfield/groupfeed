@@ -62,7 +62,7 @@ public class GroupFeedEvents {
     }
 
     private boolean isContributor(MessageReceivedEvent event) {
-        if(event.getAuthor().getLongID() == 184538928986980352L) {
+        if(event.getAuthor().getLongID() == PropertiesReader.getBotOwnerID()) {
             return true;
         }
 
