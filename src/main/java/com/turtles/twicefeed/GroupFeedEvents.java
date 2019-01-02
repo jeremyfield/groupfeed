@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TwiceFeedEvents {
+public class GroupFeedEvents {
 
     TwitterStream twitterStream;
     Twitter twitter = new TwitterFactory().getInstance();
     Instant createdAt;
 
-    public TwiceFeedEvents(TwitterStream twitterStream) {
+    public GroupFeedEvents(TwitterStream twitterStream) {
         this.twitterStream = twitterStream;
         createdAt = Instant.now();
     }
@@ -33,7 +33,7 @@ public class TwiceFeedEvents {
     public void onMessageReceived(MessageReceivedEvent event) {
         String message = event.getMessage().getContent();
         if(message.startsWith("!uptime")) {
-            TwiceFeedBot.sendMessage(event.getChannel(), "Twice Feed has been online for: " + Duration.between(createdAt, Instant.now()));
+            GroupFeedBot.sendMessage(event.getChannel(), "Twice Feed has been online for: " + Duration.between(createdAt, Instant.now()));
         } else if(message.startsWith("!commands")) {
             handleCommandsCommand(event);
         } else if(message.startsWith("!fansites")) {
@@ -83,7 +83,7 @@ public class TwiceFeedEvents {
                 .append("!check <account>" + System.lineSeparator())
                 .append("!post <tweetID> <member name>" + System.lineSeparator())
                 .append("```");
-        TwiceFeedBot.sendMessage(event.getChannel(), builder.toString());
+        GroupFeedBot.sendMessage(event.getChannel(), builder.toString());
     }
 
     private void handleFansitesCommand(MessageReceivedEvent event) {
@@ -92,7 +92,7 @@ public class TwiceFeedEvents {
 
         try {
             List<String> accounts = Accounts.getAccountsFollowed();
-            TwiceFeedBot.sendMessage(event.getChannel(), accounts.size() + " accounts are followed: ");
+            GroupFeedBot.sendMessage(event.getChannel(), accounts.size() + " accounts are followed: ");
             for(int i = 0; i < accounts.size(); i += partitionSize) {
                 partitions.add(accounts.subList(i, Math.min(i + partitionSize, accounts.size())));
             }
@@ -105,7 +105,7 @@ public class TwiceFeedEvents {
             builder.append("```" + System.lineSeparator());
             builder.append(accounts.stream().collect(Collectors.joining(", ")));
             builder.append(System.lineSeparator() + "```");
-            TwiceFeedBot.sendMessage(event.getChannel(), builder.toString());
+            GroupFeedBot.sendMessage(event.getChannel(), builder.toString());
         }
     }
 
@@ -116,7 +116,7 @@ public class TwiceFeedEvents {
 
         String[] params = event.getMessage().getContent().trim().split(" ");
         if(params.length < 2) {
-            TwiceFeedBot.sendMessage(event.getChannel(), "Please specify the account you want to follow.");
+            GroupFeedBot.sendMessage(event.getChannel(), "Please specify the account you want to follow.");
             return;
         }
 
@@ -125,13 +125,13 @@ public class TwiceFeedEvents {
         try {
             accounts = Accounts.getAccountsFollowed();
             if(accounts.contains(accountToFollow))
-                TwiceFeedBot.sendMessage(event.getChannel(), "That account is already followed.");
+                GroupFeedBot.sendMessage(event.getChannel(), "That account is already followed.");
             else {
-                TwiceFeedBot.sendMessage(event.getChannel(), "Following... please wait a moment.");
+                GroupFeedBot.sendMessage(event.getChannel(), "Following... please wait a moment.");
                 accounts.add(accountToFollow);
                 Accounts.setAccountsFollowed(accounts);
                 restartStream();
-                TwiceFeedBot.sendMessage(event.getChannel(), "Account followed. Twitter stream restarted.");
+                GroupFeedBot.sendMessage(event.getChannel(), "Account followed. Twitter stream restarted.");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -145,7 +145,7 @@ public class TwiceFeedEvents {
 
         String[] params = event.getMessage().getContent().trim().split(" ");
         if(params.length < 2) {
-            TwiceFeedBot.sendMessage(event.getChannel(), "Please specify the account you want to follow.");
+            GroupFeedBot.sendMessage(event.getChannel(), "Please specify the account you want to follow.");
             return;
         }
 
@@ -154,13 +154,13 @@ public class TwiceFeedEvents {
         try {
             accounts = Accounts.getAccountsFollowed();
             if(accounts.remove(accountToUnfollow)) {
-                TwiceFeedBot.sendMessage(event.getChannel(), "Unfollowing... please wait a moment.");
+                GroupFeedBot.sendMessage(event.getChannel(), "Unfollowing... please wait a moment.");
                 Accounts.setAccountsFollowed(accounts);
                 restartStream();
-                TwiceFeedBot.sendMessage(event.getChannel(), "Account unfollowed. Twitter stream restarted.");
+                GroupFeedBot.sendMessage(event.getChannel(), "Account unfollowed. Twitter stream restarted.");
             }
             else
-                TwiceFeedBot.sendMessage(event.getChannel(), "Account already not followed.");
+                GroupFeedBot.sendMessage(event.getChannel(), "Account already not followed.");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,7 +169,7 @@ public class TwiceFeedEvents {
     private void handleCheckCommand(MessageReceivedEvent event) {
         String[] params = event.getMessage().getContent().trim().split(" ");
         if(params.length < 2) {
-            TwiceFeedBot.sendMessage(event.getChannel(), "Please specify the account you want to check.");
+            GroupFeedBot.sendMessage(event.getChannel(), "Please specify the account you want to check.");
             return;
         }
 
@@ -177,10 +177,10 @@ public class TwiceFeedEvents {
         try {
             List<String> accounts = Accounts.getAccountsFollowed();
             if(accounts.contains(accountToCheck)) {
-                TwiceFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is already followed.");
+                GroupFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is already followed.");
             }
             else {
-                TwiceFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is not being followed.");
+                GroupFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is not being followed.");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -194,7 +194,7 @@ public class TwiceFeedEvents {
 
         String[] params = event.getMessage().getContent().trim().split(" ");
         if(params.length < 3) {
-            TwiceFeedBot.sendMessage(event.getChannel(), "Please specify the tweet ID and the member channel to post to.");
+            GroupFeedBot.sendMessage(event.getChannel(), "Please specify the tweet ID and the member channel to post to.");
             return;
         }
 
@@ -202,10 +202,10 @@ public class TwiceFeedEvents {
         String member = params[2];
         try {
             String message = StatusParser.makeMessage(twitter.showStatus(tweetID));
-            TwiceFeedBot.sendMessage(member, message);
-            TwiceFeedBot.sendMessage(event.getChannel(), "message has been posted.");
+            GroupFeedBot.sendMessage(member, message);
+            GroupFeedBot.sendMessage(event.getChannel(), "message has been posted.");
         } catch (TwitterException e) {
-            TwiceFeedBot.sendMessage(event.getChannel(), "That is not a valid tweet id.");
+            GroupFeedBot.sendMessage(event.getChannel(), "That is not a valid tweet id.");
             e.printStackTrace();
         }
     }
@@ -216,7 +216,7 @@ public class TwiceFeedEvents {
         }
 
         restartStream();
-        TwiceFeedBot.sendMessage(event.getChannel(), "Twitter stream restarted.");
+        GroupFeedBot.sendMessage(event.getChannel(), "Twitter stream restarted.");
     }
 
     private void restartStream() {

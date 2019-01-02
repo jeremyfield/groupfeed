@@ -12,12 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 
-public class TwiceFeedBot {
+public class GroupFeedBot {
 
     private static IDiscordClient discordClient;
 
-    public TwiceFeedBot(String token, TwitterStream twitterStream) {
-        ClientBuilder clientBuilder = new ClientBuilder().withToken(token).registerListener(new TwiceFeedEvents(twitterStream));
+    public GroupFeedBot(String token, TwitterStream twitterStream) {
+        ClientBuilder clientBuilder = new ClientBuilder().withToken(token).registerListener(new GroupFeedEvents(twitterStream));
         try {
             discordClient = clientBuilder.login();
         } catch (DiscordException e) {
@@ -30,18 +30,14 @@ public class TwiceFeedBot {
         return discordClient;
     }
 
-    public static void sendMessage(final String memberName, final String message) {
-        File membersConfig = new File("members.properties");
-        try (FileReader fileReader = new FileReader(membersConfig)){
-            Properties properties = new Properties();
-            properties.load(fileReader);
+    public static void sendMessageToGroupChannel(final String message) {
+        long channelId = PropertiesReader.getGroupChannelID();
+        sendMessage(discordClient.getChannelByID(channelId), message);
+    }
 
-            long channelId = Long.parseLong(properties.getProperty(memberName));
-            sendMessage(discordClient.getChannelByID(channelId), message);
-        } catch (IOException | NumberFormatException e) {
-            System.err.println("Could not send message to discord channel: ");
-            e.printStackTrace();
-        }
+    public static void sendMessage(final String memberName, final String message) {
+        long channelId = PropertiesReader.getMemberChannelID(memberName);
+        sendMessage(discordClient.getChannelByID(channelId), message);
     }
 
     public static void sendMessage(final IChannel channel, final String message) {

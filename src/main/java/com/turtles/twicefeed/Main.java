@@ -9,7 +9,7 @@ import java.io.IOException;
 public class Main {
     public static void main( String[] args ) {
         TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
-        TwiceFeedListener twiceFeedListener = new TwiceFeedListener();
+        GroupFeedListener groupFeedListener = new GroupFeedListener();
 
         FilterQuery filterQuery = new FilterQuery();
         long[] userIds;
@@ -20,15 +20,10 @@ public class Main {
             return;
         }
         filterQuery.follow(userIds);
-        twitterStream.addListener(twiceFeedListener);
+        twitterStream.addListener(groupFeedListener);
 
-        try {
-            String discordToken = PropertiesReader.getDiscordToken();
-            TwiceFeedBot twiceFeedBot = new TwiceFeedBot(discordToken, twitterStream);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String discordToken = PropertiesReader.getDiscordToken();
+        GroupFeedBot groupFeedBot = new GroupFeedBot(discordToken, twitterStream);
         twitterStream.filter(filterQuery);
     }
 }
