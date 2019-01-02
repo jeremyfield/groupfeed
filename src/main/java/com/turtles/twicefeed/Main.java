@@ -8,11 +8,6 @@ import java.io.IOException;
 
 public class Main {
     public static void main( String[] args ) {
-        if(args.length < 1) {
-            System.err.println("Please enter the discord bot token as the first argument.");
-            return;
-        }
-
         TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
         TwiceFeedListener twiceFeedListener = new TwiceFeedListener();
 
@@ -27,7 +22,13 @@ public class Main {
         filterQuery.follow(userIds);
         twitterStream.addListener(twiceFeedListener);
 
-        TwiceFeedBot twiceFeedBot = new TwiceFeedBot(args[0], twitterStream);
+        try {
+            String discordToken = PropertiesReader.getDiscordToken();
+            TwiceFeedBot twiceFeedBot = new TwiceFeedBot(discordToken, twitterStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         twitterStream.filter(filterQuery);
     }
 }
