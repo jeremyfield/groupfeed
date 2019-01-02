@@ -31,7 +31,7 @@ public class TwiceFeedBot {
     }
 
     public static void sendMessage(final String memberName, final String message) {
-        File membersConfig = new File("src/main/resources/members.properties");
+        File membersConfig = new File("members.properties");
         try (FileReader fileReader = new FileReader(membersConfig)){
             Properties properties = new Properties();
             properties.load(fileReader);

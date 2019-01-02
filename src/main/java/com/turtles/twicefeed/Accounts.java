@@ -16,7 +16,7 @@ public class Accounts {
     private static final JsonWriterFactory WRITER_FACTORY = Json.createWriterFactory(null);
 
     public static List<String> getAccountsFollowed() throws IOException {
-        try(InputStream inputStream = new FileInputStream("src/main/resources/fansites.json");
+        try(InputStream inputStream = new FileInputStream("fansites.json");
             JsonReader reader = READER_FACTORY.createReader(inputStream)) {
             JsonObject rootObject = reader.readObject();
             JsonArray screenNames = rootObject.getJsonArray("fansites");
@@ -29,7 +29,7 @@ public class Accounts {
     }
 
     public static void setAccountsFollowed(List<String> accounts) throws IOException {
-        try(OutputStream outputStream = new FileOutputStream("src/main/resources/fansites.json");
+        try(OutputStream outputStream = new FileOutputStream("fansites.json");
             JsonWriter writer = WRITER_FACTORY.createWriter(outputStream)) {
             JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
             accounts.stream().forEach(account -> arrayBuilder.add(account));
