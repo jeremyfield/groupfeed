@@ -1,4 +1,4 @@
-package com.turtles.twicefeed;
+package com.turtles.groupfeed;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

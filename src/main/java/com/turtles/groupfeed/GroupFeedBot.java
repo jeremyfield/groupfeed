@@ -1,4 +1,4 @@
-package com.turtles.twicefeed;
+package com.turtles.groupfeed;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -6,11 +6,6 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RequestBuffer;
 import twitter4j.TwitterStream;
-
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Properties;
 
 public class GroupFeedBot {
 

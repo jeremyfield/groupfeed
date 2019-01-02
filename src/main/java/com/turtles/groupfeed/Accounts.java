@@ -1,4 +1,4 @@
-package com.turtles.twicefeed;
+package com.turtles.groupfeed;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;

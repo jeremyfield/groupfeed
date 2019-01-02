@@ -1,4 +1,4 @@
-package com.turtles.twicefeed;
+package com.turtles.groupfeed;
 
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
@@ -33,7 +33,7 @@ public class GroupFeedEvents {
     public void onMessageReceived(MessageReceivedEvent event) {
         String message = event.getMessage().getContent();
         if(message.startsWith("!uptime")) {
-            GroupFeedBot.sendMessage(event.getChannel(), "Twice Feed has been online for: " + Duration.between(createdAt, Instant.now()));
+            GroupFeedBot.sendMessage(event.getChannel(), "Group Feed has been online for: " + Duration.between(createdAt, Instant.now()));
         } else if(message.startsWith("!commands")) {
             handleCommandsCommand(event);
         } else if(message.startsWith("!fansites")) {

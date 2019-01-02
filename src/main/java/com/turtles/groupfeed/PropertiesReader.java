@@ -1,4 +1,4 @@
-package com.turtles.twicefeed;
+package com.turtles.groupfeed;
 
 import java.io.FileInputStream;
 import java.io.IOException;

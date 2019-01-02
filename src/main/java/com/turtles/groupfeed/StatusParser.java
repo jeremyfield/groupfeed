@@ -1,4 +1,4 @@
-package com.turtles.twicefeed;
+package com.turtles.groupfeed;
 
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -52,7 +52,7 @@ public class StatusParser {
 
     private static String getStatusURL(Status status) {
         StringBuilder builder = new StringBuilder();
-        builder.append("https://twitter.com/twicefeed/status/")
+        builder.append("https://twitter.com/groupfeed/status/")
                 .append(status.getId());
         return builder.toString();
     }
