@@ -7,6 +7,8 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RequestBuffer;
 import twitter4j.TwitterStream;
 
+import java.util.List;
+
 public class GroupFeedBot {
 
     private static IDiscordClient discordClient;
@@ -26,13 +28,13 @@ public class GroupFeedBot {
     }
 
     public static void sendMessageToGroupChannel(final String message) {
-        long channelId = PropertiesReader.getGroupChannelID();
-        sendMessage(discordClient.getChannelByID(channelId), message);
+        List<Long> channelIds = PropertiesReader.getGroupChannelIds();
+        channelIds.forEach(channelId -> sendMessage(discordClient.getChannelByID(channelId), message));
     }
 
     public static void sendMessage(final String memberName, final String message) {
-        long channelId = PropertiesReader.getMemberChannelID(memberName);
-        sendMessage(discordClient.getChannelByID(channelId), message);
+        List<Long> channelIds = PropertiesReader.getMemberChannelIds(memberName);
+        channelIds.forEach(channelId -> sendMessage(discordClient.getChannelByID(channelId), message));
     }
 
     public static void sendMessage(final IChannel channel, final String message) {

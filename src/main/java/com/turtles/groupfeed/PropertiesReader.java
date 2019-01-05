@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PropertiesReader {
 
@@ -19,20 +20,27 @@ public class PropertiesReader {
         return getStringListFromProp("members", "ot.identifiers");
     }
 
-    public static long getBotOwnerID() {
+    public static long getBotOwnerId() {
         return getLongFromProp("discord", "ownerId");
     }
 
-    public static long getGroupChannelID() {
-        return getLongFromProp("members", "ot.channels");
+    public static List<Long> getGroupChannelIds() {
+        return getLongListFromProp("members", "ot.channels");
     }
 
-    public static long getMemberChannelID(String  memberName) {
-        return getLongFromProp("members", memberName + ".channels");
+    public static List<Long> getMemberChannelIds(String  memberName) {
+        return getLongListFromProp("members", memberName + ".channels");
     }
 
     public static List<String> getMemberIdentifiers(String memberName) {
         return getStringListFromProp("members", memberName + ".identifiers");
+    }
+
+    private static List<Long> getLongListFromProp(String propFile, String propName) {
+        String value = getStringFromProp(propFile, propName);
+        return Arrays.stream(value.split(","))
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
     }
 
     private static long getLongFromProp(String propFile, String propName) {
