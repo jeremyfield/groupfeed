@@ -43,18 +43,13 @@ public class StatusParser {
         String screenName = "`@" + status.getUser().getScreenName() + "`";
         String url = getStatusURL(status);
         StringBuilder builder = new StringBuilder();
-        builder.append(screenName)
-                .append(" | ")
-                .append("<").append(url).append(">")
-                .append(System.lineSeparator());
+        builder.append("<").append(url).append(">").append(System.lineSeparator())
+                .append(screenName).append(System.lineSeparator());
         return builder.toString();
     }
 
     private static String getStatusURL(Status status) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("https://twitter.com/groupfeed/status/")
-                .append(status.getId());
-        return builder.toString();
+        return "https://twitter.com/" + status.getUser().getScreenName() + "/status/" + status.getId();
     }
 
     private static Optional<String> findSourceDate(Status status) {
