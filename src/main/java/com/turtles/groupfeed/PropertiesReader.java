@@ -16,24 +16,28 @@ public class PropertiesReader {
         return getStringListFromProp("members", "memberNames");
     }
 
-    public static List<String> getGroupIdentifiers() {
-        return getStringListFromProp("members", "ot.identifiers");
+    public static Set<String> getGroupIdentifiers() {
+        return getStringSetFromProp("members", "ot.identifiers");
     }
 
     public static long getBotOwnerId() {
         return getLongFromProp("discord", "ownerId");
     }
 
-    public static List<Long> getGroupChannelIds() {
-        return getLongListFromProp("members", "ot.channels");
+    public static Set<Long> getGroupChannelIds() {
+        return getLongSetFromProp("members", "ot.channels");
     }
 
-    public static List<Long> getMemberChannelIds(String  memberName) {
-        return getLongListFromProp("members", memberName + ".channels");
+    public static Set<Long> getMemberChannelIds(String  memberName) {
+        return getLongSetFromProp("members", memberName + ".channels");
     }
 
-    public static List<String> getMemberIdentifiers(String memberName) {
-        return getStringListFromProp("members", memberName + ".identifiers");
+    public static Set<String> getMemberIdentifiers(String memberName) {
+        return getStringSetFromProp("members", memberName + ".identifiers");
+    }
+
+    private static Set<Long> getLongSetFromProp(String propFile, String propName) {
+        return new HashSet<>(getLongListFromProp(propFile, propName));
     }
 
     private static List<Long> getLongListFromProp(String propFile, String propName) {
@@ -46,6 +50,10 @@ public class PropertiesReader {
     private static long getLongFromProp(String propFile, String propName) {
         String value = getStringFromProp(propFile, propName);
         return Long.valueOf(value);
+    }
+
+    private static Set<String> getStringSetFromProp(String propFile, String propName) {
+        return new HashSet<>(getStringListFromProp(propFile, propName));
     }
 
     private static List<String> getStringListFromProp(String propFile, String propName) {

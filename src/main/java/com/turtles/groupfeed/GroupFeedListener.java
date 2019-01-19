@@ -7,13 +7,13 @@ import java.util.*;
 public class GroupFeedListener implements StatusListener {
 
     private List<String> memberNames;
-    private Map<String, List<String>> memberToIdentifiersMap;
+    private Map<String, Set<String>> memberToIdentifiersMap;
 
     public GroupFeedListener() {
         memberNames = PropertiesReader.getMemberNames();
         memberToIdentifiersMap = new HashMap<>();
         for(String name: memberNames) {
-            List<String> memberIdentifiers = PropertiesReader.getMemberIdentifiers(name);
+            Set<String> memberIdentifiers = PropertiesReader.getMemberIdentifiers(name);
             memberToIdentifiersMap.put(name, memberIdentifiers);
         }
     }
@@ -71,7 +71,7 @@ public class GroupFeedListener implements StatusListener {
     }
 
     private boolean hasGroupHashtag(HashtagEntity[] hashtagEntities) {
-        List<String> groupIdentifiers = PropertiesReader.getGroupIdentifiers();
+        Set<String> groupIdentifiers = PropertiesReader.getGroupIdentifiers();
         return groupIdentifiers.stream()
                 .anyMatch(identifier -> containsHashtag(hashtagEntities, identifier));
     }
@@ -79,7 +79,7 @@ public class GroupFeedListener implements StatusListener {
     private List<String> parseForMembers(HashtagEntity[] hashtagEntities) {
         List<String> membersMentioned = new ArrayList<>();
         for(String memberName: memberNames) {
-            List<String> identifiers = memberToIdentifiersMap.get(memberName);
+            Set<String> identifiers = memberToIdentifiersMap.get(memberName);
             if(containsAnyHashtag(hashtagEntities, identifiers)) {
                 membersMentioned.add(memberName);
             }
@@ -87,7 +87,7 @@ public class GroupFeedListener implements StatusListener {
         return membersMentioned;
     }
 
-    public static boolean containsAnyHashtag(HashtagEntity[] hashtagEntities, List<String> stringList) {
+    public static boolean containsAnyHashtag(HashtagEntity[] hashtagEntities, Set<String> stringList) {
         return stringList.stream()
                 .anyMatch(string -> containsHashtag(hashtagEntities, string));
     }
