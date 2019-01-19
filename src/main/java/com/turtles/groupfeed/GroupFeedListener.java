@@ -6,16 +6,13 @@ import java.util.*;
 
 public class GroupFeedListener implements StatusListener {
 
-    private List<String> memberNames;
-    private Map<String, Set<String>> memberToIdentifiersMap;
+    private IdolGroup idolGroup;
+    private Set<IdolMember> idolMembers;
 
     public GroupFeedListener() {
-        memberNames = PropertiesReader.getMemberNames();
-        memberToIdentifiersMap = new HashMap<>();
-        for(String name: memberNames) {
-            Set<String> memberIdentifiers = PropertiesReader.getMemberIdentifiers(name);
-            memberToIdentifiersMap.put(name, memberIdentifiers);
-        }
+        idolGroup = new IdolGroup();
+        idolMembers = new HashSet<>();
+        PropertiesReader.getMemberNames().forEach(name -> idolMembers.add(new IdolMember(name)));
     }
 
     @Override
@@ -71,17 +68,16 @@ public class GroupFeedListener implements StatusListener {
     }
 
     private boolean hasGroupHashtag(HashtagEntity[] hashtagEntities) {
-        Set<String> groupIdentifiers = PropertiesReader.getGroupIdentifiers();
-        return groupIdentifiers.stream()
+        return idolGroup.getIdentifiers().stream()
                 .anyMatch(identifier -> containsHashtag(hashtagEntities, identifier));
     }
 
     private List<String> parseForMembers(HashtagEntity[] hashtagEntities) {
         List<String> membersMentioned = new ArrayList<>();
-        for(String memberName: memberNames) {
-            Set<String> identifiers = memberToIdentifiersMap.get(memberName);
+        for(IdolMember member: idolMembers) {
+            Set<String> identifiers = member.getIdentifiers();
             if(containsAnyHashtag(hashtagEntities, identifiers)) {
-                membersMentioned.add(memberName);
+                membersMentioned.add(member.getName());
             }
         }
         return membersMentioned;
