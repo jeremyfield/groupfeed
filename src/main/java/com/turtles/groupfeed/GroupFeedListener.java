@@ -17,17 +17,26 @@ public class GroupFeedListener implements StatusListener {
 
     @Override
     public void onStatus(Status status) {
-        if(status.isRetweet() || status.getInReplyToStatusId() != -1)
+        FansiteStatus fansiteStatus = new FansiteStatus(status);
+        if(fansiteStatus.isIgnorableStatus()) {
             return;
-
-        if(status.getMediaEntities().length == 0)
-            return;
-        else if(status.getMediaEntities()[0].getType().equals("animated_gif"))
-            return;
+        }
 
         String message = StatusParser.makeMessage(status);
-        List<String> membersMentioned = parseForMembers(status.getHashtagEntities());
-        sendMessage(membersMentioned, status, message);
+        List<IdolMember> membersMentioned = fansiteStatus.getMembersMentioned(idolMembers);
+        sendMessage(membersMentioned, fansiteStatus, message);
+    }
+
+    private void sendMessage(List<IdolMember> membersMentioned, FansiteStatus fansiteStatus, String message) {
+        if(membersMentioned.size() == 0) {
+            if(fansiteStatus.containsAnyHashtag(idolGroup.getIdentifiers())) {
+                GroupFeedBot.sendMessageToGroupChannel(message);
+            }
+        } else if(membersMentioned.size() > 1) {
+            GroupFeedBot.sendMessageToGroupChannel(message);
+        } else {
+            GroupFeedBot.sendMessage(membersMentioned.get(0).getName(), message);
+        }
     }
 
     @Override
@@ -53,45 +62,5 @@ public class GroupFeedListener implements StatusListener {
     @Override
     public void onException(Exception e) {
         //TODO: lower priority
-    }
-
-    private void sendMessage(List<String> membersMentioned, Status status, String message) {
-        if(membersMentioned.size() == 0) {
-            if (hasGroupHashtag(status.getHashtagEntities())) {
-                GroupFeedBot.sendMessageToGroupChannel(message);
-            }
-        } else if(membersMentioned.size() > 1) {
-            GroupFeedBot.sendMessageToGroupChannel(message);
-        } else {
-            GroupFeedBot.sendMessage(membersMentioned.get(0), message);
-        }
-    }
-
-    private boolean hasGroupHashtag(HashtagEntity[] hashtagEntities) {
-        return idolGroup.getIdentifiers().stream()
-                .anyMatch(identifier -> containsHashtag(hashtagEntities, identifier));
-    }
-
-    private List<String> parseForMembers(HashtagEntity[] hashtagEntities) {
-        List<String> membersMentioned = new ArrayList<>();
-        for(IdolMember member: idolMembers) {
-            Set<String> identifiers = member.getIdentifiers();
-            if(containsAnyHashtag(hashtagEntities, identifiers)) {
-                membersMentioned.add(member.getName());
-            }
-        }
-        return membersMentioned;
-    }
-
-    public static boolean containsAnyHashtag(HashtagEntity[] hashtagEntities, Set<String> stringList) {
-        return stringList.stream()
-                .anyMatch(string -> containsHashtag(hashtagEntities, string));
-    }
-
-    public static boolean containsHashtag(HashtagEntity[] hashtagEntities, String string) {
-        return Arrays.stream(hashtagEntities)
-                .map(HashtagEntity::getText)
-                .anyMatch(string::equalsIgnoreCase);
-
     }
 }
