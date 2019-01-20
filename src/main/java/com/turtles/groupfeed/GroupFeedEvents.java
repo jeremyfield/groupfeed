@@ -199,11 +199,13 @@ public class GroupFeedEvents {
         }
 
         long tweetID = Long.parseLong(params[1]);
-        String member = params[2];
         try {
             FansiteStatus fansiteStatus = new FansiteStatus(twitter.showStatus(tweetID));
-            String message = fansiteStatus.toString();
-            GroupFeedBot.sendMessage(member, message);
+            if(params[2].equalsIgnoreCase("ot")) {
+                GroupFeedBot.sendMessageToGroupChannel(fansiteStatus.toString());
+            } else {
+                GroupFeedBot.sendMessage(new IdolMember(params[2].toLowerCase()), fansiteStatus.toString());
+            }
             GroupFeedBot.sendMessage(event.getChannel(), "message has been posted.");
         } catch (TwitterException e) {
             GroupFeedBot.sendMessage(event.getChannel(), "That is not a valid tweet id.");

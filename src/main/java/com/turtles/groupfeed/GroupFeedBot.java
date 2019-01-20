@@ -33,8 +33,8 @@ public class GroupFeedBot {
         channelIds.forEach(channelId -> sendMessage(discordClient.getChannelByID(channelId), message));
     }
 
-    public static void sendMessage(final String memberName, final String message) {
-        Set<Long> channelIds = PropertiesReader.getMemberChannelIds(memberName);
+    public static void sendMessage(final IdolMember idolMember, final String message) {
+        Set<Long> channelIds = idolMember.getChannelIds();
         channelIds.forEach(channelId -> sendMessage(discordClient.getChannelByID(channelId), message));
     }
 

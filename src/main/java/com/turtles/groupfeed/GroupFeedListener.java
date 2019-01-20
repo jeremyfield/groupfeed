@@ -35,7 +35,7 @@ public class GroupFeedListener implements StatusListener {
         } else if(membersMentioned.size() > 1) {
             GroupFeedBot.sendMessageToGroupChannel(message);
         } else {
-            GroupFeedBot.sendMessage(membersMentioned.get(0).getName(), message);
+            GroupFeedBot.sendMessage(membersMentioned.get(0), message);
         }
     }
 
