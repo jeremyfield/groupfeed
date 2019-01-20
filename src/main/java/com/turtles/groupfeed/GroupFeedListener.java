@@ -22,7 +22,7 @@ public class GroupFeedListener implements StatusListener {
             return;
         }
 
-        String message = StatusParser.makeMessage(status);
+        String message = fansiteStatus.toString();
         List<IdolMember> membersMentioned = fansiteStatus.getMembersMentioned(idolMembers);
         sendMessage(membersMentioned, fansiteStatus, message);
     }

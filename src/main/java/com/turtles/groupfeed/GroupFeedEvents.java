@@ -201,7 +201,8 @@ public class GroupFeedEvents {
         long tweetID = Long.parseLong(params[1]);
         String member = params[2];
         try {
-            String message = StatusParser.makeMessage(twitter.showStatus(tweetID));
+            FansiteStatus fansiteStatus = new FansiteStatus(twitter.showStatus(tweetID));
+            String message = fansiteStatus.toString();
             GroupFeedBot.sendMessage(member, message);
             GroupFeedBot.sendMessage(event.getChannel(), "message has been posted.");
         } catch (TwitterException e) {
