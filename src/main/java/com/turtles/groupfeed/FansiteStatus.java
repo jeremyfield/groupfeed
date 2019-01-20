@@ -1,11 +1,15 @@
 package com.turtles.groupfeed;
 
 import twitter4j.HashtagEntity;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class FansiteStatus {
@@ -50,5 +54,38 @@ public class FansiteStatus {
         return idolMembers.stream()
                 .filter(idolMember -> containsAnyHashtag(idolMember.getIdentifiers()))
                 .collect(Collectors.toList());
+    }
+
+    public String getUrl() {
+        return "https://twitter.com/" + status.getUser().getScreenName() + "/status/" + status.getId();
+    }
+
+    public Optional<String> getSourceDate() {
+        Pattern pattern = Pattern.compile("(\\d{6})");
+        Matcher matcher = pattern.matcher(status.getText());
+        return (matcher.find() && matcher.groupCount() == 1) ?
+                Optional.of(matcher.group(0) + System.lineSeparator()) : Optional.empty();
+    }
+
+    public String getMediaUrls() {
+        if(containsMediaType("photo")) {
+            return Arrays.stream(status.getMediaEntities())
+                    .map(MediaEntity::getMediaURLHttps)
+                    .collect(Collectors.joining(System.lineSeparator()));
+        } else if(containsMediaType("video")) {
+            return getUrl();
+        } else {
+            return "";
+        }
+    }
+
+    public String toString() {
+        String str = getUrl() + System.lineSeparator();
+        str += "`@" + status.getUser().getScreenName() + "`" + System.lineSeparator();
+        if(getSourceDate().isPresent()) {
+            str += getSourceDate() + System.lineSeparator();
+        }
+        str += getMediaUrls();
+        return str;
     }
 }
