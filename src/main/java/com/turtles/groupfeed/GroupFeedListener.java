@@ -22,20 +22,13 @@ public class GroupFeedListener implements StatusListener {
             return;
         }
 
-        String message = fansiteStatus.toString();
         List<IdolMember> membersMentioned = fansiteStatus.getMembersMentioned(idolMembers);
-        sendMessage(membersMentioned, fansiteStatus, message);
-    }
-
-    private void sendMessage(List<IdolMember> membersMentioned, FansiteStatus fansiteStatus, String message) {
-        if(membersMentioned.size() == 0) {
-            if(fansiteStatus.containsAnyHashtag(idolGroup.getIdentifiers())) {
-                GroupFeedBot.sendMessageToGroupChannel(message);
-            }
-        } else if(membersMentioned.size() > 1) {
-            GroupFeedBot.sendMessageToGroupChannel(message);
-        } else {
-            GroupFeedBot.sendMessage(membersMentioned.get(0), message);
+        if(membersMentioned.size() > 1) {
+            GroupFeedBot.sendMessageToGroupChannel(fansiteStatus.toString());
+        } else if(membersMentioned.size() == 1) {
+            GroupFeedBot.sendMessage(membersMentioned.get(0), fansiteStatus.toString());
+        } else if(fansiteStatus.containsAnyHashtag(idolGroup.getIdentifiers())) {
+            GroupFeedBot.sendMessageToGroupChannel(fansiteStatus.toString());
         }
     }
 
