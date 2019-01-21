@@ -81,7 +81,7 @@ public class FansiteStatus {
     }
 
     public String toString() {
-        String str = getUrl() + System.lineSeparator();
+        String str = "<" + getUrl() + ">" + System.lineSeparator();
         str += TwitterUtils.formatScreenName(status.getUser().getScreenName()) + System.lineSeparator();
         if(getSourceDate().isPresent()) {
             str += getSourceDate() + System.lineSeparator();
