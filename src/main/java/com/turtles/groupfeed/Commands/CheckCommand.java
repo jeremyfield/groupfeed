@@ -20,15 +20,16 @@ public class CheckCommand implements Command {
 
         List<Long> currentFansiteIds = FansiteIds.getFansiteIds();
         for(String screenName : args) {
+            String formattedName = TwitterUtils.formatScreenName(screenName);
             try {
                 User fansiteToCheck = TwitterUtils.getUserByScreenName(screenName);
                 if(currentFansiteIds.contains(fansiteToCheck.getId())) {
-                    GroupFeedBot.sendMessage(event.getChannel(), "`" + screenName + "` is already followed :white_check_mark:");
+                    GroupFeedBot.sendMessage(event.getChannel(), formattedName + " is already followed :white_check_mark:");
                 } else {
-                    GroupFeedBot.sendMessage(event.getChannel(), "`" + screenName + "` is not followed :x:");
+                    GroupFeedBot.sendMessage(event.getChannel(), formattedName + " is not followed :x:");
                 }
             } catch (TwitterException e) {
-                GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + screenName + " on Twitter :exclamation:");
+                GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + formattedName + " on Twitter :exclamation:");
             }
         }
     }
