@@ -65,7 +65,7 @@ public class FansiteStatus {
         Pattern pattern = Pattern.compile(TwitterConstants.SOURCE_DATE_PATTERN);
         Matcher matcher = pattern.matcher(status.getText());
         return (matcher.find() && matcher.groupCount() == 1) ?
-                Optional.of(matcher.group(0) + System.lineSeparator()) : Optional.empty();
+                Optional.of(matcher.group(0)) : Optional.empty();
     }
 
     public String getMediaUrls() {
