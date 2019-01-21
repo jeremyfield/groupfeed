@@ -70,7 +70,6 @@ public class GroupFeedEvents {
                 .append("!uptime" + System.lineSeparator())
                 .append("!follow <account>" + System.lineSeparator())
                 .append("!unfollow <account>" + System.lineSeparator())
-                .append("!fansites" + System.lineSeparator())
                 .append("!refresh" + System.lineSeparator())
                 .append("!check <account>" + System.lineSeparator())
                 .append("!post <tweetID> <member name>" + System.lineSeparator())
