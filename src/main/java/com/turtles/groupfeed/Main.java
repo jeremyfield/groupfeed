@@ -11,7 +11,7 @@ public class Main {
         GroupFeedListener groupFeedListener = new GroupFeedListener();
 
         FilterQuery filterQuery = new FilterQuery();
-        filterQuery.follow(FansiteIdUtils.getFansiteIdsAsLongArray());
+        filterQuery.follow(FansiteIds.getFansiteIdsAsLongArray());
         twitterStream.addListener(groupFeedListener);
 
         String discordToken = DiscordPropertiesReader.getDiscordToken();

@@ -91,12 +91,12 @@ public class GroupFeedEvents {
 
         try {
             User fansite = TwitterUtils.getUserByScreenName(params[1]);
-            List<Long> currentFansiteIds = FansiteIdUtils.getFansiteIds();
+            List<Long> currentFansiteIds = FansiteIds.getFansiteIds();
             if(currentFansiteIds.contains(fansite.getId())) {
                 GroupFeedBot.sendMessage(event.getChannel(), "That account is already followed.");
             } else {
                 GroupFeedBot.sendMessage(event.getChannel(), "Following... please wait a moment.");
-                FansiteIdUtils.addFansite(fansite.getId());
+                FansiteIds.addFansite(fansite.getId());
                 restartStream();
                 GroupFeedBot.sendMessage(event.getChannel(), "Account followed. Twitter stream restarted.");
 
@@ -120,12 +120,12 @@ public class GroupFeedEvents {
 
         try {
             User fansite = TwitterUtils.getUserByScreenName(params[1]);
-            List<Long> currentFansiteIds = FansiteIdUtils.getFansiteIds();
+            List<Long> currentFansiteIds = FansiteIds.getFansiteIds();
             if(!currentFansiteIds.contains(fansite.getId())) {
                 GroupFeedBot.sendMessage(event.getChannel(), "Account already not followed.");
             } else {
                 GroupFeedBot.sendMessage(event.getChannel(), "Unfollowing... please wait a moment.");
-                FansiteIdUtils.removeFansite(fansite.getId());
+                FansiteIds.removeFansite(fansite.getId());
                 restartStream();
                 GroupFeedBot.sendMessage(event.getChannel(), "Account unfollowed. Twitter stream restarted.");
             }
@@ -145,7 +145,7 @@ public class GroupFeedEvents {
         String accountToCheck = params[1];
         try {
             User fansiteToCheck = TwitterUtils.getUserByScreenName(params[1]);
-            List<Long> currentFansiteIds = FansiteIdUtils.getFansiteIds();
+            List<Long> currentFansiteIds = FansiteIds.getFansiteIds();
             if(currentFansiteIds.contains(fansiteToCheck.getId())) {
                 GroupFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is already followed.");
             } else {
@@ -194,7 +194,7 @@ public class GroupFeedEvents {
 
     private void restartStream() {
         FilterQuery filterQuery = new FilterQuery();
-        long[] userIds = FansiteIdUtils.getFansiteIdsAsLongArray();
+        long[] userIds = FansiteIds.getFansiteIdsAsLongArray();
         filterQuery.follow(userIds);
         twitterStream.cleanUp();
         twitterStream.filter(filterQuery);

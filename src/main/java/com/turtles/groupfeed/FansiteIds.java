@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FansiteIdUtils {
+public class FansiteIds {
 
     public static long[] getFansiteIdsAsLongArray() {
         return getFansiteIds().stream().mapToLong(l -> l).toArray();
