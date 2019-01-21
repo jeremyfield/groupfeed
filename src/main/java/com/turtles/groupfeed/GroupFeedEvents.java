@@ -5,18 +5,11 @@ import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.shard.DisconnectedEvent;
 import sx.blah.discord.handle.obj.IRole;
-import twitter4j.FilterQuery;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.TwitterStream;
+import twitter4j.*;
 
-import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class GroupFeedEvents {
 
@@ -36,8 +29,6 @@ public class GroupFeedEvents {
             GroupFeedBot.sendMessage(event.getChannel(), "Group Feed has been online for: " + Duration.between(createdAt, Instant.now()));
         } else if(message.startsWith("!commands")) {
             handleCommandsCommand(event);
-        } else if(message.startsWith("!fansites")) {
-            handleFansitesCommand(event);
         } else if(message.startsWith("!follow ")) {
             handleFollowCommand(event);
         } else if(message.startsWith("!unfollow ")) {
@@ -86,29 +77,6 @@ public class GroupFeedEvents {
         GroupFeedBot.sendMessage(event.getChannel(), builder.toString());
     }
 
-    private void handleFansitesCommand(MessageReceivedEvent event) {
-        int partitionSize = 50;
-        List<List<String>> partitions = new ArrayList<>();
-
-        try {
-            List<String> accounts = Accounts.getAccountsFollowed();
-            GroupFeedBot.sendMessage(event.getChannel(), accounts.size() + " accounts are followed: ");
-            for(int i = 0; i < accounts.size(); i += partitionSize) {
-                partitions.add(accounts.subList(i, Math.min(i + partitionSize, accounts.size())));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for(List<String> accounts : partitions) {
-            StringBuilder builder = new StringBuilder();
-            builder.append("```" + System.lineSeparator());
-            builder.append(accounts.stream().collect(Collectors.joining(", ")));
-            builder.append(System.lineSeparator() + "```");
-            GroupFeedBot.sendMessage(event.getChannel(), builder.toString());
-        }
-    }
-
     private void handleFollowCommand(MessageReceivedEvent event) {
         if(!isContributor(event)) {
             return;
@@ -120,21 +88,21 @@ public class GroupFeedEvents {
             return;
         }
 
-        String accountToFollow = params[1];
-        List<String> accounts;
         try {
-            accounts = Accounts.getAccountsFollowed();
-            if(accounts.contains(accountToFollow))
+            User fansite = TwitterUtils.getUserByScreenName(params[1]);
+            List<Long> currentFansiteIds = FansiteIdUtils.getFansiteIds();
+            if(currentFansiteIds.contains(fansite.getId())) {
                 GroupFeedBot.sendMessage(event.getChannel(), "That account is already followed.");
-            else {
+            } else {
                 GroupFeedBot.sendMessage(event.getChannel(), "Following... please wait a moment.");
-                accounts.add(accountToFollow);
-                Accounts.setAccountsFollowed(accounts);
+                FansiteIdUtils.addFansite(fansite.getId());
                 restartStream();
                 GroupFeedBot.sendMessage(event.getChannel(), "Account followed. Twitter stream restarted.");
+
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (TwitterException e) {
+            GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + params[1] + " on Twitter.");
+            System.err.println("Cannot find user " + params[1] + " to follow.");
         }
     }
 
@@ -149,20 +117,20 @@ public class GroupFeedEvents {
             return;
         }
 
-        String accountToUnfollow = params[1];
-        List<String> accounts;
         try {
-            accounts = Accounts.getAccountsFollowed();
-            if(accounts.remove(accountToUnfollow)) {
+            User fansite = TwitterUtils.getUserByScreenName(params[1]);
+            List<Long> currentFansiteIds = FansiteIdUtils.getFansiteIds();
+            if(!currentFansiteIds.contains(fansite.getId())) {
+                GroupFeedBot.sendMessage(event.getChannel(), "Account already not followed.");
+            } else {
                 GroupFeedBot.sendMessage(event.getChannel(), "Unfollowing... please wait a moment.");
-                Accounts.setAccountsFollowed(accounts);
+                FansiteIdUtils.removeFansite(fansite.getId());
                 restartStream();
                 GroupFeedBot.sendMessage(event.getChannel(), "Account unfollowed. Twitter stream restarted.");
             }
-            else
-                GroupFeedBot.sendMessage(event.getChannel(), "Account already not followed.");
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (TwitterException e) {
+            GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + params[1] + " on Twitter.");
+            System.err.println("Cannot find user " + params[1] + " to unfollow.");
         }
     }
 
@@ -175,15 +143,16 @@ public class GroupFeedEvents {
 
         String accountToCheck = params[1];
         try {
-            List<String> accounts = Accounts.getAccountsFollowed();
-            if(accounts.contains(accountToCheck)) {
+            User fansiteToCheck = TwitterUtils.getUserByScreenName(params[1]);
+            List<Long> currentFansiteIds = FansiteIdUtils.getFansiteIds();
+            if(currentFansiteIds.contains(fansiteToCheck.getId())) {
                 GroupFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is already followed.");
-            }
-            else {
+            } else {
                 GroupFeedBot.sendMessage(event.getChannel(), "`" + accountToCheck + "` is not being followed.");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (TwitterException e) {
+            GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + params[1] + " on Twitter.");
+            System.err.println("Cannot find user " + params[1] + " on Twitter.");
         }
     }
 
@@ -224,13 +193,7 @@ public class GroupFeedEvents {
 
     private void restartStream() {
         FilterQuery filterQuery = new FilterQuery();
-        long[] userIds;
-        try {
-            userIds = Accounts.getUserIds();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
-        }
+        long[] userIds = FansiteIdUtils.getFansiteIdsAsLongArray();
         filterQuery.follow(userIds);
         twitterStream.cleanUp();
         twitterStream.filter(filterQuery);
