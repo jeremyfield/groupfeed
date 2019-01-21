@@ -6,6 +6,10 @@ public class TwitterUtils {
 
     private static Twitter twitter = TwitterFactory.getSingleton();
 
+    public static String formatScreenName(String screenName) {
+        return "`@" + screenName + "`";
+    }
+
     public static User getUserById(long id) throws TwitterException {
         return twitter.showUser(id);
     }

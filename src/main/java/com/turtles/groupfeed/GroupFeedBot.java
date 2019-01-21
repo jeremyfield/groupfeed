@@ -1,5 +1,6 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Commands.*;
 import com.turtles.groupfeed.Properties.MembersPropertiesReader;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
@@ -15,7 +16,15 @@ public class GroupFeedBot {
     private static IDiscordClient discordClient;
 
     public GroupFeedBot(String token, TwitterStream twitterStream) {
-        ClientBuilder clientBuilder = new ClientBuilder().withToken(token).registerListener(new GroupFeedEvents(twitterStream));
+        CommandHandler commandHandler = new CommandHandler();
+        commandHandler.addCommand("check", new CheckCommand());
+        commandHandler.addCommand("post", new PostCommand());
+        commandHandler.addCommand("uptime", new UptimeCommand());
+        commandHandler.addCommand("follow", new FollowCommand(twitterStream));
+        commandHandler.addCommand("unfollow", new UnfollowCommand(twitterStream));
+        commandHandler.addCommand("refresh", new RefreshCommand(twitterStream));
+
+        ClientBuilder clientBuilder = new ClientBuilder().withToken(token).registerListener(commandHandler);
         try {
             discordClient = clientBuilder.login();
         } catch (DiscordException e) {

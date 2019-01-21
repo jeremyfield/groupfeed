@@ -25,22 +25,24 @@ public class UnfollowCommand implements Command {
         }
 
         if(!args.isEmpty()) {
+            GroupFeedBot.sendMessage(event.getChannel(), "Unfollowing... please wait a moment.");
             List<Long> currentFansiteIds = FansiteIds.getFansiteIds();
             for(String screenName : args) {
+                String formattedName = TwitterUtils.formatScreenName(screenName);
                 try {
                     User fansite = TwitterUtils.getUserByScreenName(screenName);
                     if(currentFansiteIds.contains(fansite.getId())) {
-                        GroupFeedBot.sendMessage(event.getChannel(), "Unfollowing... please wait a moment.");
                         FansiteIds.removeFansite(fansite.getId());
-                        TwitterUtils.restartStream(twitterStream);
-                        GroupFeedBot.sendMessage(event.getChannel(), "Account unfollowed. Twitter stream restarted.");
+                        GroupFeedBot.sendMessage(event.getChannel(), "Unfollowing " + formattedName + "... :white_check_mark:");
                     } else {
-                        GroupFeedBot.sendMessage(event.getChannel(), screenName + " is already not followed.");
+                        GroupFeedBot.sendMessage(event.getChannel(), formattedName + " is already not followed :x:");
                     }
                 } catch (TwitterException e) {
-                    GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + screenName + " on Twitter.");
+                    GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + formattedName + " on Twitter :exclamation:");
                 }
             }
+            TwitterUtils.restartStream(twitterStream);
+            GroupFeedBot.sendMessage(event.getChannel(), "Twitter stream restarted with removed fansites.");
         } else {
             GroupFeedBot.sendMessage(event.getChannel(), "Please specify fansite(s) to unfollow.");
         }

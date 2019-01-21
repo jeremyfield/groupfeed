@@ -25,22 +25,24 @@ public class FollowCommand implements Command {
         }
 
         if(!args.isEmpty()) {
+            GroupFeedBot.sendMessage(event.getChannel(), "Following... please wait a moment.");
             List<Long> currentFansiteIds = FansiteIds.getFansiteIds();
             for(String screenName : args) {
+                String formattedName = TwitterUtils.formatScreenName(screenName);
                 try {
                     User fansite = TwitterUtils.getUserByScreenName(screenName);
                     if(currentFansiteIds.contains(fansite.getId())) {
-                        GroupFeedBot.sendMessage(event.getChannel(), screenName + " is already followed.");
+                        GroupFeedBot.sendMessage(event.getChannel(), formattedName + " is already followed :x:");
                     } else {
-                        GroupFeedBot.sendMessage(event.getChannel(), "Following... please wait a moment.");
                         FansiteIds.addFansite(fansite.getId());
-                        TwitterUtils.restartStream(twitterStream);
-                        GroupFeedBot.sendMessage(event.getChannel(), "Account followed. Twitter stream restarted.");
+                        GroupFeedBot.sendMessage(event.getChannel(), "Following " + formattedName + "... :white_check_mark:");
                     }
                 } catch (TwitterException e) {
-                    GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + screenName + " on Twitter.");
+                    GroupFeedBot.sendMessage(event.getChannel(), "Cannot find " + formattedName + " on Twitter :exclamation:");
                 }
             }
+            TwitterUtils.restartStream(twitterStream);
+            GroupFeedBot.sendMessage(event.getChannel(), "Twitter stream restarted with new fansites.");
         } else {
             GroupFeedBot.sendMessage(event.getChannel(), "Please specify fansite(s) to follow.");
         }

@@ -7,7 +7,15 @@ import java.util.*;
 
 public class CommandHandler {
 
-    private static Map<String, Command> commandMap = new HashMap<>();
+    private static Map<String, Command> commandMap;
+
+    public CommandHandler() {
+        commandMap = new HashMap<>();
+    }
+
+    public void addCommand(String commandTrigger, Command command) {
+        commandMap.put(commandTrigger, command);
+    }
 
     @EventSubscriber
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -16,7 +24,7 @@ public class CommandHandler {
             return;
         }
 
-        String commandString = argArray[0].substring(1);
+        String commandString = argArray[0].substring(1).toLowerCase();
         List<String> argsList = new ArrayList<>(Arrays.asList(argArray));
         argsList.remove(0);
         if(commandMap.containsKey(commandString)) {
