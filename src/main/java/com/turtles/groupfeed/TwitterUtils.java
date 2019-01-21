@@ -1,9 +1,6 @@
 package com.turtles.groupfeed;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.User;
+import twitter4j.*;
 
 public class TwitterUtils {
 
@@ -15,5 +12,9 @@ public class TwitterUtils {
 
     public static User getUserByScreenName(String screenName) throws TwitterException {
         return twitter.showUser(screenName);
+    }
+
+    public static Status getStatusById(long id) throws TwitterException {
+        return twitter.showStatus(id);
     }
 }

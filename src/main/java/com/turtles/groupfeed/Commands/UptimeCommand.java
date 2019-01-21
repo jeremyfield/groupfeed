@@ -9,7 +9,7 @@ import java.util.List;
 
 public class UptimeCommand implements Command {
 
-    Instant createdAt;
+    private Instant createdAt;
 
     public UptimeCommand() {
         createdAt = Instant.now();
