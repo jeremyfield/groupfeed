@@ -9,6 +9,10 @@ public class TwitterUtils {
 
     private static Twitter twitter = TwitterFactory.getSingleton();
 
+    public static User getUserById(long id) throws TwitterException {
+        return twitter.showUser(id);
+    }
+
     public static User getUserByScreenName(String screenName) throws TwitterException {
         return twitter.showUser(screenName);
     }

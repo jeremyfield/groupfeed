@@ -1,29 +1,29 @@
 package com.turtles.groupfeed.Properties;
 
+import com.turtles.groupfeed.Constants.PropertiesConstants;
+
 import java.util.List;
 import java.util.Set;
 
 public class MembersPropertiesReader {
 
-    public static final String PROP_FILE = "members";
-
     public static List<String> getMemberNames() {
-        return PropertiesReader.getStringListFromProp(PROP_FILE, "memberNames");
+        return PropertiesReader.getStringListFromProp(PropertiesConstants.MEMBERS, PropertiesConstants.MEMBER_NAMES);
     }
 
     public static Set<Long> getMemberChannelIds(String  memberName) {
-        return PropertiesReader.getLongSetFromProp(PROP_FILE, memberName + ".channels");
+        return PropertiesReader.getLongSetFromProp(PropertiesConstants.MEMBERS, memberName + PropertiesConstants.DOT_CHANNELS);
     }
 
     public static Set<String> getMemberIdentifiers(String memberName) {
-        return PropertiesReader.getStringSetFromProp(PROP_FILE, memberName + ".identifiers");
+        return PropertiesReader.getStringSetFromProp(PropertiesConstants.MEMBERS, memberName + PropertiesConstants.DOT_IDENTIFIERS);
     }
 
     public static Set<String> getGroupIdentifiers() {
-        return PropertiesReader.getStringSetFromProp(PROP_FILE, "ot.identifiers");
+        return PropertiesReader.getStringSetFromProp(PropertiesConstants.MEMBERS, PropertiesConstants.OT_IDENTIFIERS);
     }
 
     public static Set<Long> getGroupChannelIds() {
-        return PropertiesReader.getLongSetFromProp(PROP_FILE, "ot.channels");
+        return PropertiesReader.getLongSetFromProp(PropertiesConstants.MEMBERS, PropertiesConstants.OT_CHANNELS);
     }
 }

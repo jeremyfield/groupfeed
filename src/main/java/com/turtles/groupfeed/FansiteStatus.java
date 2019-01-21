@@ -1,5 +1,6 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Constants.TwitterConstants;
 import twitter4j.HashtagEntity;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
@@ -47,7 +48,7 @@ public class FansiteStatus {
     }
 
     public boolean isIgnorableStatus() {
-        return isRetweet() || isReply() || !containsMedia() || containsMediaType("animated_gif");
+        return isRetweet() || isReply() || !containsMedia() || containsMediaType(TwitterConstants.ANIMATED_GIF);
     }
 
     public List<IdolMember> getMembersMentioned(Set<IdolMember> idolMembers) {
@@ -57,25 +58,25 @@ public class FansiteStatus {
     }
 
     public String getUrl() {
-        return "https://twitter.com/" + status.getUser().getScreenName() + "/status/" + status.getId();
+        return TwitterConstants.TWITTER_DOMAIN + status.getUser().getScreenName() + TwitterConstants.STATUS_PATH + status.getId();
     }
 
     public Optional<String> getSourceDate() {
-        Pattern pattern = Pattern.compile("(\\d{6})");
+        Pattern pattern = Pattern.compile(TwitterConstants.SOURCE_DATE_PATTERN);
         Matcher matcher = pattern.matcher(status.getText());
         return (matcher.find() && matcher.groupCount() == 1) ?
                 Optional.of(matcher.group(0) + System.lineSeparator()) : Optional.empty();
     }
 
     public String getMediaUrls() {
-        if(containsMediaType("photo")) {
+        if(containsMediaType(TwitterConstants.PHOTO)) {
             return Arrays.stream(status.getMediaEntities())
                     .map(MediaEntity::getMediaURLHttps)
                     .collect(Collectors.joining(System.lineSeparator()));
-        } else if(containsMediaType("video")) {
+        } else if(containsMediaType(TwitterConstants.VIDEO)) {
             return getUrl();
         } else {
-            return "";
+            return TwitterConstants.NO_MEDIA;
         }
     }
 

@@ -1,5 +1,8 @@
 package com.turtles.groupfeed;
 
+import twitter4j.TwitterException;
+import twitter4j.User;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -12,6 +15,19 @@ public class FansiteIds {
 
     public static long[] getFansiteIdsAsLongArray() {
         return getFansiteIds().stream().mapToLong(l -> l).toArray();
+    }
+
+    public static boolean isFansiteStored(User fansite) {
+        return isFansiteStored(fansite.getId());
+    }
+
+    public static boolean isFansiteStored(long id) {
+        try {
+            User fansiteToCheck = TwitterUtils.getUserById(id);
+            return getFansiteIds().contains(fansiteToCheck.getId());
+        } catch (TwitterException e) {
+            return false;
+        }
     }
 
     public static List<Long> getFansiteIds() {
