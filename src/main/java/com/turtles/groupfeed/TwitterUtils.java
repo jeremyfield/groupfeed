@@ -17,4 +17,9 @@ public class TwitterUtils {
     public static Status getStatusById(long id) throws TwitterException {
         return twitter.showStatus(id);
     }
+
+    public static void restartStream(TwitterStream twitterStream) {
+        twitterStream.cleanUp();
+        twitterStream.filter(new FilterQuery().follow(FansiteIds.getFansiteIdsAsLongArray()));
+    }
 }

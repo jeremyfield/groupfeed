@@ -10,7 +10,7 @@ public class PostCommand implements Command {
 
     @Override
     public void runCommand(MessageReceivedEvent event, List<String> args) {
-        if(CommandUtils.isContributor(event)) {
+        if(!CommandUtils.isContributor(event)) {
             return;
         }
 
