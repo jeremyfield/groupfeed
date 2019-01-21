@@ -1,5 +1,6 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Properties.DiscordPropertiesReader;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -53,7 +54,7 @@ public class GroupFeedEvents {
     }
 
     private boolean isContributor(MessageReceivedEvent event) {
-        if(event.getAuthor().getLongID() == PropertiesReader.getBotOwnerId()) {
+        if(event.getAuthor().getLongID() == DiscordPropertiesReader.getBotOwnerId()) {
             return true;
         }
 

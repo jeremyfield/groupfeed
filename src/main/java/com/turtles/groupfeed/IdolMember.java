@@ -1,5 +1,7 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Properties.MembersPropertiesReader;
+
 import java.util.Set;
 
 public class IdolMember {
@@ -10,8 +12,8 @@ public class IdolMember {
 
     public IdolMember(String name) {
         this.name = name;
-        this.identifiers = PropertiesReader.getMemberIdentifiers(name);
-        this.channelIds = PropertiesReader.getMemberChannelIds(name);
+        this.identifiers = MembersPropertiesReader.getMemberIdentifiers(name);
+        this.channelIds = MembersPropertiesReader.getMemberChannelIds(name);
     }
 
     public String getName() {

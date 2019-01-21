@@ -1,5 +1,6 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Properties.MembersPropertiesReader;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.handle.obj.IChannel;
@@ -7,7 +8,6 @@ import sx.blah.discord.util.DiscordException;
 import sx.blah.discord.util.RequestBuffer;
 import twitter4j.TwitterStream;
 
-import java.util.List;
 import java.util.Set;
 
 public class GroupFeedBot {
@@ -29,7 +29,7 @@ public class GroupFeedBot {
     }
 
     public static void sendMessageToGroupChannel(final String message) {
-        Set<Long> channelIds = PropertiesReader.getGroupChannelIds();
+        Set<Long> channelIds = MembersPropertiesReader.getGroupChannelIds();
         channelIds.forEach(channelId -> sendMessage(discordClient.getChannelByID(channelId), message));
     }
 

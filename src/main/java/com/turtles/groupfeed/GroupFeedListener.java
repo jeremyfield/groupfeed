@@ -1,5 +1,6 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Properties.MembersPropertiesReader;
 import twitter4j.*;
 
 import java.util.*;
@@ -12,7 +13,7 @@ public class GroupFeedListener implements StatusListener {
     public GroupFeedListener() {
         idolGroup = new IdolGroup();
         idolMembers = new HashSet<>();
-        PropertiesReader.getMemberNames().forEach(name -> idolMembers.add(new IdolMember(name)));
+        MembersPropertiesReader.getMemberNames().forEach(name -> idolMembers.add(new IdolMember(name)));
     }
 
     @Override

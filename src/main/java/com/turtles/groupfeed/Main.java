@@ -1,5 +1,6 @@
 package com.turtles.groupfeed;
 
+import com.turtles.groupfeed.Properties.DiscordPropertiesReader;
 import twitter4j.FilterQuery;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
@@ -13,7 +14,7 @@ public class Main {
         filterQuery.follow(FansiteIdUtils.getFansiteIdsAsLongArray());
         twitterStream.addListener(groupFeedListener);
 
-        String discordToken = PropertiesReader.getDiscordToken();
+        String discordToken = DiscordPropertiesReader.getDiscordToken();
         GroupFeedBot groupFeedBot = new GroupFeedBot(discordToken, twitterStream);
         twitterStream.filter(filterQuery);
     }
