@@ -72,6 +72,7 @@ public class FansiteStatus {
         if(containsMediaType(TwitterConstants.PHOTO)) {
             return Arrays.stream(status.getMediaEntities())
                     .map(MediaEntity::getMediaURLHttps)
+                    .map(url -> url + TwitterConstants.ORIG)
                     .collect(Collectors.joining(System.lineSeparator()));
         } else if(containsMediaType(TwitterConstants.VIDEO)) {
             return getUrl();

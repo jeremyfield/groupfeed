@@ -8,4 +8,5 @@ public class TwitterConstants {
     public static final String VIDEO = "video";
     public static final String SOURCE_DATE_PATTERN = "(\\d{6})";
     public static final String NO_MEDIA = "";
+    public static final String ORIG = ":orig";
 }
