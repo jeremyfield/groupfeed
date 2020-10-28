@@ -1,11 +1,11 @@
 package com.turtles.groupfeed.Commands;
 
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import org.javacord.api.event.message.MessageCreateEvent;
+import org.javacord.api.listener.message.MessageCreateListener;
 
 import java.util.*;
 
-public class CommandHandler {
+public class CommandHandler implements MessageCreateListener {
 
     private static Map<String, Command> commandMap;
 
@@ -17,9 +17,9 @@ public class CommandHandler {
         commandMap.put(commandTrigger, command);
     }
 
-    @EventSubscriber
-    public void onMessageReceived(MessageReceivedEvent event) {
-        String[] argArray = event.getMessage().getContent().split(" ");
+    @Override
+    public void onMessageCreate(MessageCreateEvent event) {
+        String[] argArray = event.getMessageContent().split(" ");
         if(argArray.length == 0 || !argArray[0].startsWith("!")) {
             return;
         }

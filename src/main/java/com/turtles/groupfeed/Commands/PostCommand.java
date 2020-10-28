@@ -1,7 +1,8 @@
 package com.turtles.groupfeed.Commands;
 
 import com.turtles.groupfeed.*;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.event.message.MessageCreateEvent;
 import twitter4j.TwitterException;
 
 import java.util.List;
@@ -9,13 +10,15 @@ import java.util.List;
 public class PostCommand implements Command {
 
     @Override
-    public void runCommand(MessageReceivedEvent event, List<String> args) {
+    public void runCommand(MessageCreateEvent event, List<String> args) {
         if(!CommandUtils.isContributor(event)) {
             return;
         }
 
+        TextChannel textChannel = event.getMessage().getChannel();
+
         if(args.size() < 2) {
-            GroupFeedBot.sendMessage(event.getChannel(), "Please specify the tweet ID(s) first and the member name last.");
+            textChannel.sendMessage("Please specify the tweet ID(s) first and the member name last.");
             return;
         }
 
@@ -27,9 +30,9 @@ public class PostCommand implements Command {
                 } else {
                     GroupFeedBot.sendMessage(new IdolMember(args.get(args.size() - 1).toLowerCase()), fansiteStatus.toString());
                 }
-                GroupFeedBot.sendMessage(event.getChannel(), args.get(i) + " has been posted :white_check_mark:");
+                textChannel.sendMessage(args.get(i) + " has been posted :white_check_mark:");
             } catch (TwitterException e) {
-                GroupFeedBot.sendMessage(event.getChannel(), args.get(i) + " is not a valid tweet ID :exclamation:");
+                textChannel.sendMessage(args.get(i) + " is not a valid tweet ID :exclamation:");
             }
         }
     }

@@ -1,8 +1,7 @@
 package com.turtles.groupfeed.Commands;
 
-import com.turtles.groupfeed.GroupFeedBot;
 import com.turtles.groupfeed.TwitterUtils;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import org.javacord.api.event.message.MessageCreateEvent;
 import twitter4j.TwitterStream;
 
 import java.util.List;
@@ -16,10 +15,10 @@ public class RefreshCommand implements Command {
     }
 
     @Override
-    public void runCommand(MessageReceivedEvent event, List<String> args) {
+    public void runCommand(MessageCreateEvent event, List<String> args) {
         if(CommandUtils.isContributor(event)) {
             TwitterUtils.restartStream(twitterStream);
-            GroupFeedBot.sendMessage(event.getChannel(), "Twitter stream restarted.");
+            event.getMessage().getChannel().sendMessage("Twitter stream restarted.");
         }
     }
 }

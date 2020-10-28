@@ -44,11 +44,13 @@ public class FansiteStatus {
     }
 
     public boolean containsAnyHashtag(Set<String> hashtags) {
-        return hashtags.stream().anyMatch(hashtag -> containsHashtag(hashtag));
+        return hashtags.stream().anyMatch(this::containsHashtag);
     }
 
     public boolean isIgnorableStatus() {
-        return isRetweet() || isReply() || !containsMedia() || containsMediaType(TwitterConstants.ANIMATED_GIF);
+        return isRetweet() || isReply() || !containsMedia()
+                || containsMediaType(TwitterConstants.ANIMATED_GIF)
+                || !FansiteIds.isFansiteStored(this.status.getUser());
     }
 
     public List<IdolMember> getMembersMentioned(Set<IdolMember> idolMembers) {

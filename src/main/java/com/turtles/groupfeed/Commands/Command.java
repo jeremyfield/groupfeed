@@ -1,10 +1,10 @@
 package com.turtles.groupfeed.Commands;
 
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.util.List;
 
 public interface Command {
 
-    void runCommand(MessageReceivedEvent event, List<String> args);
+    void runCommand(MessageCreateEvent event, List<String> args);
 }

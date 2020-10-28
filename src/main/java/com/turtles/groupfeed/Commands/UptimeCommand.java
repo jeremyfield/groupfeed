@@ -1,7 +1,7 @@
 package com.turtles.groupfeed.Commands;
 
-import com.turtles.groupfeed.GroupFeedBot;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import org.javacord.api.entity.channel.TextChannel;
+import org.javacord.api.event.message.MessageCreateEvent;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -16,7 +16,8 @@ public class UptimeCommand implements Command {
     }
 
     @Override
-    public void runCommand(MessageReceivedEvent event, List<String> args) {
-        GroupFeedBot.sendMessage(event.getChannel(), "Group Feed has been online for: " + Duration.between(createdAt, Instant.now()));
+    public void runCommand(MessageCreateEvent event, List<String> args) {
+        TextChannel textChannel = event.getChannel();
+        textChannel.sendMessage("Group Feed has been online for: " + Duration.between(createdAt, Instant.now()));
     }
 }
