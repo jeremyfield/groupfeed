@@ -53,6 +53,6 @@ public class GroupFeedBot {
     }
 
     public static List<Role> getRolesOfUser(Server server, User user) {
-        return server.getRoles(user);
+        return user.getRoles(server);
     }
 }

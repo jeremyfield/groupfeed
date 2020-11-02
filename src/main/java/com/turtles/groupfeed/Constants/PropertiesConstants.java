@@ -12,4 +12,5 @@ public class PropertiesConstants {
     public static final String OT_CHANNELS = "ot.channels";
     public static final String LIST_DELIMITER = ",";
     public static final String PROPERTIES = ".properties";
+    public static final String PREFIX = "prefix";
 }

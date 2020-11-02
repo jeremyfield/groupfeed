@@ -11,4 +11,8 @@ public class DiscordPropertiesReader {
     public static long getBotOwnerId() {
         return PropertiesReader.getLongFromProp(PropertiesConstants.DISCORD, PropertiesConstants.OWNER_ID);
     }
+
+    public static String getCommandPrefix() {
+        return PropertiesReader.getStringFromProp(PropertiesConstants.DISCORD, PropertiesConstants.PREFIX);
+    }
 }
